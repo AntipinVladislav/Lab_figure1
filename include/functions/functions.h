@@ -1,30 +1,37 @@
 #pragma once
 
-namespace function {
+namespace vlad {
 	enum FigureType {
-		Circle,
-		Triangle,
-		Rectangle
+		circle,
+		triangle,
+		rectangle
+	};
+
+	struct Point {
+		float x;
+		float y;
+		float LenOfPoints(Point point)
 	};
 
 	class Figure {
 	private:
-		FigureType current_type;
-		float coordinates[5];
-		
-		
+		FigureType type;
+		Point coordinates[4];
 	public:
-		void set_coordinates(Figure current_figure, float* coordinates);
+		Figure();
+		Figure(FigureType type, Point* coordinates);
 
-		float get_perimeter(Figure current_figure);
+		bool operator== (const Figure figure) const;
 
-		float get_area(Figure current_figure);
+		void SetType(FigureType Type);
+		FigureType GetType();
 
-		float find_minimal_outer_rectangle(Figure current_figure);
-
-		float get_type(Figure current_figure);
-
-		void get_coordinates(Figure current_figure, float* coordinates);
+		void SetCoordinates(Point* points);
+		Point GetCoordinate(int index);
+		
+		float GetPerimeter();
+		float GetSquare();
+		void SetMinFramingRectangle(Figure figure);
 	};
 	
 }
