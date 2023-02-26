@@ -10,7 +10,7 @@ namespace vlad {
 	struct Point {
 		float x;
 		float y;
-		float LenOfPoints(Point point)
+		float LenOfPoints(Point point);
 	};
 
 	class Figure {
@@ -32,6 +32,23 @@ namespace vlad {
 		float GetPerimeter();
 		float GetSquare();
 		void SetMinFramingRectangle(Figure figure);
+	};
+
+	class FigureArray {
+	private:
+		const static int capacity = 5;
+		Figure figures[capacity];
+		int count = 0;
+	public:
+		Figure operator[](const int index) const;
+		int GetCount();
+
+		void SetFigureOnIndex(Figure figure, int index);
+		Figure GetFigureOnIndex(int index);
+		
+		int AddFigure(Figure figure);
+		void DeleteFigureOnIndex(int index);
+		Figure GetMinSquareFigure();
 	};
 	
 }
