@@ -40,10 +40,11 @@ namespace vlad {
 		Figure figures[capacity];
 		int count = 0;
 	public:
+
 		Figure operator[](const int index) const;
 		int GetCount();
 
-		void SetFigureOnIndex(Figure figure, int index);
+		void InsertFigureOnIndex(Figure figure, int index);
 		Figure GetFigureOnIndex(int index);
 		
 		int AddFigure(Figure figure);

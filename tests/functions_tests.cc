@@ -112,13 +112,13 @@ TEST(FunctionsTests, GetCount_Test13) {
     EXPECT_EQ(quantity, 2);
 }
 
-TEST(FunctionsTests, SetFigureOnIndex_GetFigureOnIndex_Test14) {
+TEST(FunctionsTests, InsertFigureOnIndex_GetFigureOnIndex_Test14) {
     FigureArray test_figure_list;
     Point test_points[4] = { -1,1,1,1,1,-1,-1,-1 };
     Figure test_figure1(rectangle, test_points);
     bool flag = false;
 
-    test_figure_list.SetFigureOnIndex(test_figure1, 0);
+    test_figure_list.InsertFigureOnIndex(test_figure1, 0);
     Figure test_figure2 = test_figure_list.GetFigureOnIndex(0);
     
     if (test_figure1 == test_figure2) {
@@ -133,7 +133,7 @@ TEST(FunctionsTests, AddFigure_Test15) {
     bool flag = false;
     Figure test_figure1(rectangle, test_points);
 
-    test_figure_list.SetFigureOnIndex(test_figure1, 0);
+    test_figure_list.InsertFigureOnIndex(test_figure1, 0);
 
     test_figure_list.AddFigure(test_figure1);
     Figure test_figure2 = test_figure_list.GetFigureOnIndex(1);
@@ -186,6 +186,76 @@ TEST(FunctionsTests, GetMinSquareFigure_Test17) {
     Figure result_figure = test_figure_list.GetMinSquareFigure();
     bool flag = false;
     if (result_figure == test_rectangle2) {
+        flag = true;
+    }
+    EXPECT_TRUE(flag);
+}
+
+TEST(FunctionsTests, GetMinSquareFigure_Test18) {
+    FigureArray test_list;
+    Point ellipse_points[4] = { -2,0,0,1,2,0,0,-1 };
+    Point trapezoid_points[4] = { -9,9,9,9,8,0,-8,0 };
+    Point rectangle_points[4] = { -4,3,4,3,4,-3,-4,-3 };
+    Figure test_ellipse(circle, ellipse_points);
+    Figure test_trapezoid(triangle, trapezoid_points);
+    Figure test_rectangle(rectangle, rectangle_points);
+
+
+    Figure result_figure = test_list.GetMinSquareFigure();
+    bool flag = false;
+    if (result_figure == test_trapezoid) {
+        flag = true;
+    }
+    EXPECT_TRUE(flag);
+}
+
+TEST(FunctionsTests, GetFigureOnIndex_AddFigure_Test19) {
+    FigureArray test_list;
+    Point test_points[4] = { -1,1,1,1,1,-1,-1,-1 };
+    Figure test_figure(rectangle, test_points);
+    //test_list.AddFigure(test_figure);
+    Figure test_figure2 = test_list.GetFigureOnIndex(-1);
+    bool flag = false;
+    if (test_figure == test_figure2) {
+        flag = true;
+    }
+    EXPECT_TRUE(flag);
+}
+
+
+
+TEST(FunctionsTests, InsertFigureOnIndex_Test20) {
+    FigureArray test_list;
+    Point test_points[4] = { -1,1,1,1,1,-1,-1,-1 };
+    Figure test_figure(rectangle, test_points);
+    Point test_points_2[4] = { -1,1,1,1,2,0,-2,0 };
+    Figure test_figure_2(triangle, test_points_2);
+    test_list.AddFigure(test_figure);
+    test_list.InsertFigureOnIndex(test_figure_2, 0);
+    test_list.InsertFigureOnIndex(test_figure_2, 0);
+    test_list.InsertFigureOnIndex(test_figure_2, 0);
+    test_list.InsertFigureOnIndex(test_figure_2, 0);
+    Figure test_figure3 = test_list.GetFigureOnIndex(0);
+    Figure test_figure4 = test_list.GetFigureOnIndex(1);
+    bool flag = false;
+    if ((test_figure == test_figure3) && (test_figure_2 == test_figure4)) {
+        flag = true;
+    }
+    EXPECT_TRUE(flag);
+}
+
+TEST(FunctionsTests, DeleteFigureOnIndex_Test21) {
+    FigureArray test_list;
+    Point test_points[4] = { -1,1,1,1,1,-1,-1,-1 };
+    Figure test_figure(rectangle, test_points);
+    Figure void_figure;
+    test_list.AddFigure(test_figure);
+    Point cur_point[4] = { -1,1,1,1,2,0,-2,0 };
+    Figure cur_figure(triangle, cur_point);
+    test_list.AddFigure(cur_figure);
+    test_list.DeleteFigureOnIndex(-1);
+    bool flag = false;
+    if (test_list.GetFigureOnIndex(0) == cur_figure) {
         flag = true;
     }
     EXPECT_TRUE(flag);

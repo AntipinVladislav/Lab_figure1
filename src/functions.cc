@@ -144,15 +144,19 @@ int FigureArray::GetCount() {
 	return count;
 }
 
-void FigureArray::SetFigureOnIndex(Figure figure, int index) {
-	if ((index < 0) || (capacity <= index)) {
-		throw out_of_range("[FigureArray::operator[]] Index is out of range.");
+
+void FigureArray::InsertFigureOnIndex(Figure figure, int index) {
+	if ((index < 0) || (index > count)) {
+		throw out_of_range("[FigureList::operator[]] Index is out of range.");
 	}
-	Figure empty_figure;
-	if (this->figures[index] == empty_figure) {
-		this->count++;
+	if (count + 1 > capacity) {
+		throw out_of_range("Array is full");
+	}
+	for (int i = count; i > index; i--) {
+		this->figures[i] = this->figures[i - 1];
 	}
 	this->figures[index] = figure;
+	this->count++;
 }
 
 Figure FigureArray::GetFigureOnIndex(int index) {
