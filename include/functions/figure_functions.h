@@ -1,13 +1,11 @@
 #pragma once
 #include <iostream>
-
+#include <vector>
+using namespace std;
 namespace vlad {
-	enum FigureType {
-		circle,
-		triangle,
-		rectangle
-	};
 
+	class Figure;
+	using FigurePtr = std::shared_ptr<Figure>;
 
 	struct Point {
 		float x;
@@ -15,78 +13,92 @@ namespace vlad {
 		float LenOfPoints(Point point);
 	};
 
-
-
 	class Figure {
-	private:
-		FigureType type;
-		Point coordinates[4];
-
+	protected:
+		Figure() = default;
 	public:
-		Figure();
-		Figure(FigureType type, Point* coordinates);
+		Figure(const Figure& fig) = delete;
+		Figure& operator=(const Figure& fig) = delete;
 
-		bool operator== (const Figure figure) const;
-
-
-		FigureType GetType();
-
-
-		float* GetCoordinate(int index);
-
-		float GetPerimeter();
-		float GetSquare();
-		bool CheckFigure();
-		void SetMinFramingRectangle(Figure figure);
+		~Figure() = default;
 
 		Point MinPoint(Point* coordinates);
 		Point MaxPoint(Point* coordinates);
 
-		Figure* Create(FigureType type, Point* points);
-		Figure* CreateCircle(float* circle_points);
-		Figure* CreateTriangle(float* triangle_points);
-		Figure* CreateRectangle(float* rectangle_points);
-
-		void Print();
-		friend std::ostream& operator<< (std::ostream& out, Figure& list);
+		Point coordinates[4];
+		virtual float GetPerimeter() = 0;
+		virtual float GetSquare() = 0;
+		Point* GetPoints();
+		void virtual SetMinFramingRectangle(Point* coordinates) = 0;
+		bool operator==(const Figure& figure);
+		bool virtual CheckFigure() = 0;
+		void virtual Print() = 0;
+		virtual unique_ptr<Figure> Clone() const = 0;
 	};
 
-	std::ostream& operator<< (std::ostream& out, Figure& fig) {
-		fig.Print();
-		return out;
-	}
+	class Circle : public Figure {
+	public:
+		Circle();
+		Circle(Point* points);
 
+		float GetPerimeter() override;
+		float GetSquare() override;
+		void SetMinFramingRectangle(Point* coordinates) override;
+		bool CheckFigure() override;
+		void Print() override;
+		unique_ptr<Figure> Clone() const override;
+	};
+
+	class Triangle : public Figure {
+	public:
+		Triangle();
+		Triangle(Point* points);
+
+		float GetPerimeter() override;
+		float GetSquare() override;
+		void SetMinFramingRectangle(Point* coordinates) override;
+		bool CheckFigure() override;
+
+		unique_ptr<Figure> Clone() const override;
+		void Print() override;
+	};
+
+	class Rectangle : public Figure {
+	public:
+		Rectangle();
+		Rectangle(Point* points);
+
+		float GetPerimeter() override;
+		float GetSquare() override;
+		void SetMinFramingRectangle(Point* coordinates) override;
+		bool CheckFigure() override;
+
+		unique_ptr<Figure> Clone() const override;
+		void Print() override;
+	};
 
 
 	class FigureArray {
 	private:
-		Figure** figures;
-		int count = 0;
+		std::vector<FigurePtr> figure_array;
+
 
 	public:
-		~FigureArray();
-		FigureArray();
-		FigureArray(FigureArray& arr);
+		void Swap(FigureArray& arr) noexcept;
 
-		Figure* operator[](const int index) const;
-		FigureArray& operator=(FigureArray& arr);
+		FigureArray() = default;
+		FigureArray(const FigureArray& arr);
+		FigurePtr operator[](const int index) const;
+		FigureArray& operator=(FigureArray arr);
 
-		int GetCount();
-		void AddFigure(Figure* figure);
-		Figure* GetFigureOnIndex(int index);
+		int Size();
 
-		void InsertFigureOnIndex(Figure* figure, int index);
-		void DeleteFigureOnIndex(int index);
 
-		Figure GetMinSquareFigure();
-
-		void Swap(FigureArray& rhs)noexcept;
+		void Add(FigurePtr figure);
+		void Insert(FigurePtr a, int index);
+		void DeleteFigure(int index);
+		Figure& MinSquareSearch();
 		void Print();
-		friend std::ostream& operator<< (std::ostream& out, FigureArray& arr);
 	};
-	std::ostream& operator<< (std::ostream& out, FigureArray& arr) {
-		arr.Print();
-		return out;
-	}
-}
 
+}
