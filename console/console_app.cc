@@ -68,7 +68,7 @@ int main() {
 				} break;
 
 				case 'r': {
-					cout << "Input rectangle's points coordinates >>>\n";
+					cout << "Input rectangle's upper left and lower right points coordinates >>>\n";
 					for (int i = 0; i < 4; i++)
 						cin >> points[i];
 					if (!(*figure.CreateRectangle(points)).CheckFigure()) {
@@ -168,6 +168,7 @@ int main() {
 					Figure min_square = figure_arr.GetMinSquareFigure();
 					cout << min_square;
 					cout << "\n";
+					cout << min_square.GetSquare();
 				}
 					  break;
 				}
@@ -175,5 +176,5 @@ int main() {
 		}
 			  break;
 		}
-	} while (choice != 0);
+	} while (choice != '0');
 }

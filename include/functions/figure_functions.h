@@ -2,9 +2,12 @@
 #include <iostream>
 
 namespace vlad {
+	enum FigureType {
+		circle,
+		triangle,
+		rectangle
+	};
 
-	class Figure;
-	using FigurePtr = std::shared_ptr<Figure>;
 
 	struct Point {
 		float x;
@@ -12,85 +15,78 @@ namespace vlad {
 		float LenOfPoints(Point point);
 	};
 
+
+
 	class Figure {
-	protected:
-		Figure() = default;
-	public:
+	private:
+		FigureType type;
 		Point coordinates[4];
-		virtual float GetPerimeter() = 0;
-		virtual float GetSquare() = 0;
-		Point* GetPoints();
-		void virtual SetMinFramingRectangle(Point* coordinates) = 0;
-		bool operator==(const Figure& figure);
-		bool virtual CheckFigure() = 0;
-		void virtual Print() = 0;
-		virtual unique_ptr<Figure> Clone() const = 0;
-	};
 
-	class Circle : public Figure {
 	public:
-		Circle();
-		Circle(Point* points);
+		Figure();
+		Figure(FigureType type, Point* coordinates);
 
-		float GetPerimeter() override;
-		float GetSquare() override;
-		void SetMinFramingRectangle(Point* coordinates) override;
-		bool CheckFigure() override;
-		void Print() override;
-		unique_ptr<Figure> Clone() const override;
-	};
+		bool operator== (const Figure figure) const;
 
-	class Triangle : public Figure {
-	public:
-		Triangle();
-		Triangle(Point* points);
 
-		float GetPerimeter() override;
-		float GetSquare() override;
-		void SetMinFramingRectangle(Point* coordinates) override;
-		bool CheckFigure() override;
-		void Print() override;
-		unique_ptr<Figure> Clone() const override;
+		FigureType GetType();
+
+
+		float* GetCoordinate(int index);
+
+		float GetPerimeter();
+		float GetSquare();
+		bool CheckFigure();
+		void SetMinFramingRectangle(Figure figure);
+
+		Point MinPoint(Point* coordinates);
+		Point MaxPoint(Point* coordinates);
+
+		Figure* Create(FigureType type, Point* points);
+		Figure* CreateCircle(float* circle_points);
+		Figure* CreateTriangle(float* triangle_points);
+		Figure* CreateRectangle(float* rectangle_points);
+
 		void Print();
+		friend std::ostream& operator<< (std::ostream& out, Figure& list);
 	};
 
-	class Rectangle : public Figure {
-	public:
-		Rectangle();
-		Rectangle(Point* points);
+	std::ostream& operator<< (std::ostream& out, Figure& fig) {
+		fig.Print();
+		return out;
+	}
 
-		float GetPerimeter() override;
-		float GetSquare() override;
-		void SetMinFramingRectangle(Point* coordinates) override;
-		bool CheckFigure() override;
-		void Print() override;
-		unique_ptr<Figure> Clone() const override;
-		void Print();
-	};
 
 
 	class FigureArray {
 	private:
-		std::vector<FigurePtr> figure_array;
-
+		Figure** figures;
+		int count = 0;
 
 	public:
-		void Swap(FigureArray& arr) noexcept;
+		~FigureArray();
+		FigureArray();
+		FigureArray(FigureArray& arr);
 
-		FigureArray() = default;
-		FigureArray(const FigureArray& arr);
-		FigurePtr operator[](const int index) const;
-		FigureArray& operator=(FigureArray arr);
+		Figure* operator[](const int index) const;
+		FigureArray& operator=(FigureArray& arr);
 
-		int Size();
+		int GetCount();
+		void AddFigure(Figure* figure);
+		Figure* GetFigureOnIndex(int index);
 
+		void InsertFigureOnIndex(Figure* figure, int index);
+		void DeleteFigureOnIndex(int index);
 
-		void Add(FigurePtr figure);
-		void Insert(FigurePtr a, int index);
-		void DeleteFigure(int index);
-		Figure& MinSquareSearch();
+		Figure GetMinSquareFigure();
+
+		void Swap(FigureArray& rhs)noexcept;
 		void Print();
+		friend std::ostream& operator<< (std::ostream& out, FigureArray& arr);
 	};
-
+	std::ostream& operator<< (std::ostream& out, FigureArray& arr) {
+		arr.Print();
+		return out;
+	}
 }
 
